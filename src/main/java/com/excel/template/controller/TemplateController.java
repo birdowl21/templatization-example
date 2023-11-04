@@ -3,6 +3,7 @@ package com.excel.template.controller;
 import com.excel.template.entity.Field;
 import com.excel.template.entity.Organization;
 import com.excel.template.reqobj.Column;
+import com.excel.template.reqobj.DeleteFields;
 import com.excel.template.reqobj.DeletedField;
 import com.excel.template.reqobj.EditedField;
 import com.excel.template.service.OrganizationService;
@@ -56,6 +57,7 @@ public class TemplateController {
         System.out.println("fields: "+fields);
         model.addAttribute("templates", fields);
         model.addAttribute("column",new Column());
+        model.addAttribute("orgName",organization.getOrgName());
         return new ModelAndView("template");
     }
 
@@ -218,6 +220,43 @@ public class TemplateController {
             return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+
+    @PostMapping(value = "/org/{orgId}/delete-all")
+    public ResponseEntity deleteAllRecords(@PathVariable("orgId") int orgId)
+    {
+        try{
+            Organization organization= organizationService.findById(orgId).orElse(null);
+            if(organization==null)
+                return new ResponseEntity<>("Bad Request", HttpStatus.BAD_REQUEST);
+            templateService.deleteAll(orgId);
+            System.out.println("Successfully deleted all records!");
+            return new ResponseEntity<>("Successfully deleted all records!", HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>("Error deleting records!", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping(value = "/org/{orgId}/delete-records")
+    public ResponseEntity deleteRecordsByIds(@PathVariable("orgId") int orgId,@RequestBody List<String> deleteFieldIdStrings)
+    {
+        try{
+            Organization organization= organizationService.findById(orgId).orElse(null);
+            if(organization==null)
+                return new ResponseEntity<>("Bad Request", HttpStatus.BAD_REQUEST);
+            List<Long> deleteFieldIds=new ArrayList<>();
+            for(String s: deleteFieldIdStrings)
+            {
+                deleteFieldIds.add(Long.parseLong(s));
+            }
+            templateService.deleteAllByIds(orgId,deleteFieldIds);
+            System.out.println("Successfully deleted the records!");
+            return new ResponseEntity<>("Successfully deleted records!", HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>("Error deleting records!", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     private String addCell(Cell cell) throws Exception
     {

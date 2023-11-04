@@ -45,4 +45,13 @@ public class TemplateService {
     public void saveAll(List<Field> fields) {
         templateRepo.saveAll(fields);
     }
+    @Transactional
+    public void deleteAll(int orgId) {
+        templateRepo.deleteByOrgId(orgId);
+    }
+
+    @Transactional
+    public void deleteAllByIds(int orgId,List<Long> fieldIds) {
+        templateRepo.deleteByOrgIdAndFieldIds(orgId,fieldIds);
+    }
 }
