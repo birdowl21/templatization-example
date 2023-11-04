@@ -22,4 +22,6 @@ public interface TemplateRepo extends JpaRepository<Field,Long> {
     @Query(value = "delete from template where org_id=?1 and field_id in ?2",nativeQuery = true)
     @Modifying
     void deleteByOrgIdAndFieldIds(int orgId, List<Long> fieldIds);
+    @Query(value = "select * from template where field_name=?1",nativeQuery = true)
+    Field findByFieldName(String fieldName);
 }

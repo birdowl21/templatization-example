@@ -1,6 +1,9 @@
 package com.excel.template.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "template")
@@ -17,6 +20,9 @@ public class Field {
     @Column(name = "field_name",nullable = false)
     private String fieldName;
 
+    @OneToMany(mappedBy = "field")
+    @JsonIgnore
+    private List<Value> values;
 
     public Organization getOrganization() {
         return organization;
@@ -42,7 +48,13 @@ public class Field {
         this.fieldName = fieldName;
     }
 
+    public List<Value> getValues() {
+        return values;
+    }
 
+    public void setValues(List<Value> values) {
+        this.values = values;
+    }
 
     @Override
     public String toString() {
@@ -50,6 +62,7 @@ public class Field {
                 "organization=" + organization +
                 ", fieldId=" + fieldId +
                 ", fieldName='" + fieldName + '\'' +
+                ", values=" + values +
                 '}';
     }
 }

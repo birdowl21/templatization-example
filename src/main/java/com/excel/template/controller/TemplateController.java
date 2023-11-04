@@ -213,7 +213,7 @@ public class TemplateController {
 
             }
             workbook.close();
-//            templateService.saveAll(fields);
+            templateService.saveData(organization,columns);
             return new ResponseEntity<>(columns, HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
