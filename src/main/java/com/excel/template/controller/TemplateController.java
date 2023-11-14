@@ -151,10 +151,10 @@ public class TemplateController {
             XSSFSheet sheet = workbook.createSheet("Organization Template");
             List<Field> fields = organization.getFields();
             System.out.print("fields: "+fields);
-            int rownum = 0;
+            int rownum = 0,col=0;
+            XSSFRow row = sheet.createRow(0);
             for (Field field : fields) {
-                XSSFRow row = sheet.createRow(rownum++);
-                row.createCell(0).setCellValue(field.getFieldName());
+                row.createCell(col++).setCellValue(field.getFieldName());
             }
             // Create a ByteArrayOutputStream to store the generated Excel data
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
